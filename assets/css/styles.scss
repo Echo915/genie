@@ -1,0 +1,28 @@
+$primary-color: #C6936A;
+$secondary-color: #fff;
+$primary-font-weight: 400;
+$nav-border-radius: 20px;
+
+
+.header {
+    margin: auto;
+    width: fit-content;
+
+    div {
+        border-radius: $nav-border-radius;
+        width: fit-content;
+    }
+
+    .nav-btn {
+        border-radius: $nav-border-radius;
+    }
+}
+
+.active {
+    background-color: $primary-color !important;
+    color: #fff !important;
+}
+
+.schedule-pane {
+    min-height: 100vh;
+}

@@ -1,0 +1,18 @@
+.header {
+  margin: auto;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.header div {
+  border-radius: 20px;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.header .nav-btn {
+  border-radius: 20px;
+}
+
+.active {
+  background-color: #C6936A !important;
+  color: #fff !important;
+}/*# sourceMappingURL=styles.css.map */

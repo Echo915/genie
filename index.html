@@ -28,7 +28,7 @@
                         <button onclick="activate(this)" class="btn nav-btn border-0">Routine</button>
                     </li>
                     <li class="nav-item">
-                        <button onclick="activate(this)" class="btn nav-btn border-0">Services</button>
+                        <button onclick="activate(this)" class="btn nav-btn border-0">Notes</button>
                     </li>
                 </ul>
             </div>
@@ -50,8 +50,28 @@
         <div class="main-page container mt-3">
             <div class="row">
                 <div class="schedule-pane col-sm-8">
-                    <div class="bg-white shadow-sm rounded-5">
-                        <p>My Schedules</p>
+                    <div class="bg-white shadow-sm rounded-5 p-5">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <small class="h1">My Schedule</small>
+                            </div>
+                            <div style="text-align: right;" class="col">
+                                <small class=" add h1 bi bi-calendar2-plus"></small>
+                            </div>
+                        </div>
+                        <div id="schedule-container">
+                            <p>
+                                <i class="bi bi-sun text-primary"></i> Morning Routine
+                            </p>
+                            <ul id="schedule-list">
+                                <li class="item">Item 1</li>
+                                <li class="item">Item 2</li>
+                                <li class="item">Item 3</li>
+                            </ul>
+                            <p>
+                                <i class="bi bi-moon-fill text-primary"></i> Evening Routine
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div id="calendar" class="col-sm-4 shadow-sm"></div>
@@ -62,8 +82,16 @@
     <script src="assets/javascript/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-          const calendar = new VanillaCalendar('#calendar');
-          calendar.init();
+            const options = {
+            settings: {
+                visibility: {
+                theme: 'light',
+                },
+            },
+            };
+            
+            const calendar = new VanillaCalendar('#calendar', options);
+            calendar.init();
         });
     </script>
 </body>

@@ -3,6 +3,8 @@ $secondary-color: #fff;
 $primary-font-weight: 400;
 $nav-border-radius: 20px;
 
+$highlight-opacity: 0.7;
+
 
 .header {
     margin: auto;
@@ -16,6 +18,8 @@ $nav-border-radius: 20px;
     .nav-btn {
         border-radius: $nav-border-radius;
     }
+
+    .nav-btn:hover {opacity: $highlight-opacity;}
 }
 
 .active {
@@ -24,5 +28,11 @@ $nav-border-radius: 20px;
 }
 
 .schedule-pane {
-    min-height: 100vh;
+    min-height: 100vh !important;
+}
+
+.schedule-pane .add {color: $primary-color;}
+
+.schedule-pane .add:hover, .schedule-pane .add:focus {
+    opacity: $highlight-opacity;
 }

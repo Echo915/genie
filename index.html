@@ -17,18 +17,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js" defer></script>
 </head>
 <body class="bg-light">
+    <div id="overlay" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeCurtain('overlay', 'schedule')">&times;</a>
+        <div id="overlay-content" class="overlay-content"></div>
+    </div>
     <header class="header">
         <nav class="navbar navbar-expand-sm">
             <div class="container-fluid bg-white p-0 overflow-hidden shadow-sm">
                 <ul class="navbar-nav p-0 m-0">
                     <li class="nav-item">
-                        <button onclick="activate(this)" class="btn active nav-btn border-0">Schedules</button>
+                        <a href="#schedules" onclick="activate(this)" class="btn active nav-btn border-0">Schedules</a>
                     </li>
                     <li class="nav-item">
-                        <button onclick="activate(this)" class="btn nav-btn border-0">Routine</button>
+                        <a href="#routines" onclick="activate(this)" class="btn nav-btn border-0">Routines</a>
                     </li>
                     <li class="nav-item">
-                        <button onclick="activate(this)" class="btn nav-btn border-0">Notes</button>
+                        <a href="#notes" onclick="activate(this)" class="btn nav-btn border-0">Notes</a>
                     </li>
                 </ul>
             </div>
@@ -48,15 +52,16 @@
     </header>
     <main>
         <div class="main-page container mt-3">
+            <!-- -----------------------------------Schedules Section------------------------------------------- -->
             <div class="row">
-                <div class="schedule-pane col-sm-8">
-                    <div class="bg-white shadow-sm rounded-5 p-5">
+                <div class="schedule-pane col">
+                    <div class="schedule-contents bg-white shadow-sm rounded-4 p-5">
                         <div class="row mb-3">
-                            <div class="col">
-                                <small class="h1">My Schedule</small>
+                            <div class="col-sm-8">
+                                <small id="schedules" class="h1">My Schedule</small>
                             </div>
                             <div style="text-align: right;" class="col">
-                                <small class=" add h1 bi bi-calendar2-plus"></small>
+                                <small onclick="openCurtain('overlay', 'schedule')" class="add-task h3 bi bi-calendar2-plus"></small>
                             </div>
                         </div>
                         <div id="schedule-container">
@@ -64,9 +69,54 @@
                                 <i class="bi bi-sun text-primary"></i> Morning Routine
                             </p>
                             <ul id="schedule-list">
-                                <li class="item">Item 1</li>
-                                <li class="item">Item 2</li>
-                                <li class="item">Item 3</li>
+                                <li>
+                                    <div id="task-item" class="task-item">
+                                        <!-- task time -->
+                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
+                                        <!-- task item  -->
+                                        <h3 class="task-content" style="padding: 10px;">Item 1</h3>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="task-item" class="task-item">
+                                        <!-- task time -->
+                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
+                                        <!-- task item  -->
+                                        <h3 class="task-content" style="padding: 10px;">Item 2</h3>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="task-item" class="task-item">
+                                        <!-- task time -->
+                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
+                                        <!-- task item  -->
+                                        <h3 class="task-content" style="padding: 10px;">Item 3</h3>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="task-item" class="task-item">
+                                        <!-- task time -->
+                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
+                                        <!-- task item  -->
+                                        <h3 class="task-content" style="padding: 10px;">Item 1</h3>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="task-item" class="task-item">
+                                        <!-- task time -->
+                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
+                                        <!-- task item  -->
+                                        <h3 class="task-content" style="padding: 10px;">Item 2</h3>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="task-item" class="task-item">
+                                        <!-- task time -->
+                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
+                                        <!-- task item  -->
+                                        <h3 class="task-content" style="padding: 10px;">Item 3</h3>
+                                    </div>
+                                </li>
                             </ul>
                             <p>
                                 <i class="bi bi-moon-fill text-primary"></i> Evening Routine
@@ -74,7 +124,89 @@
                         </div>
                     </div>
                 </div>
-                <div id="calendar" class="col-sm-4 shadow-sm"></div>
+                <div class="col-sm-4 position-relative">
+                    <div id="calendar" class="shadow-sm position-sticky"></div>
+                </div>
+            </div><br><br><br><br>
+
+            <!-- -----------------------------------Routines Section------------------------------------------- -->
+            <div class="main-routine-section bg-white rounded-4 shadow p-3 position-relative">
+                <small id="routines" class="h1">Routines</small>
+                <small onclick="openCurtain('overlay', 'routine')" class="bi bi-person-walking h3 position-absolute add-icon">+</small>
+                <div class="routine-container row ">
+                    <span class="routine-item col-sm-4 p-5">
+                        <div class="head bg-light shadow">
+                            <p class="h6">Some Head</p>
+                        </div>
+                        <div class="routine-details">
+                            <ul class="details py-3">
+                                <li>some text</li>
+                                <li>some more text</li>
+                                <li>Even more text</li>
+                            </ul>
+                        </div>
+                    </span>
+                    <span class="routine-item col-sm-4 p-5">
+                        <div class="head">
+                            <p>Some Head</p>
+                        </div>
+                        <div class="routine-details">
+                            <ul class="details py-3">
+                                <li>some text</li>
+                                <li>some more text</li>
+                                <li>Even more text</li>
+                            </ul>
+                        </div>
+                    </span>
+                    <span class="routine-item col-sm-4 p-5">
+                        <div class="head">
+                            <p>Some Head</p>
+                        </div>
+                        <div class="routine-details">
+                            <ul class="details py-3">
+                                <li>some text</li>
+                                <li>some more text</li>
+                                <li>Even more text</li>
+                            </ul>
+                        </div>
+                    </span>
+                    <span class="routine-item col-sm-4">
+                        <div class="head">
+                            <p>Some Head</p>
+                        </div>
+                        <div class="details">
+                            <ul class="details">
+                                <li>some text</li>
+                                <li>some more text</li>
+                                <li>Even more text</li>
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+            </div><br><br><br><br>
+            <!-- ------------------------------------Notes Section------------------------------------- -->
+            <div class="container position-relative p-3 bg-white rounded-4 shadow notes-section">
+                <small id="notes" class="h1">Notes</small>
+                <small onclick="openCurtain('overlay', 'note')" class="bi bi-journal-plus h3 position-absolute add-icon"></small>
+            </div><br><br><br>
+        </div>
+        <!--------------------------------- Schedule Form ------------------------------------------>
+        <div id="schedule" class="mini-form">
+            <div id="body">
+                <div id="head">
+                    <h1 id="title">New Task</h1>
+                </div>
+                <div>
+                    <form method="POST">
+                        <p class="fst-italic">Keep track of your tasks and give your brain a break!!</p>
+                        <div>
+                            <input class="mb-3" type="text" placeholder="I want to..." required><br>
+                            <small class="h6">Due Period</small>
+                            <input type="datetime-local" required>
+                        </div>
+                        <input class="btn" type="submit" value="Add">
+                    </form>
+                </div>
             </div>
         </div>
     </main>

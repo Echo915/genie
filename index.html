@@ -18,13 +18,13 @@
 </head>
 <body class="bg-light">
     <div id="overlay" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeCurtain('overlay', 'schedule')">&times;</a>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeCurtain('overlay')">&times;</a>
         <div id="overlay-content" class="overlay-content"></div>
     </div>
-    <header class="header">
-        <nav class="navbar navbar-expand-sm">
+    <header id="header" class="header bg-light" style="z-index: 100; position: fixed; width: 100%; left: 0; top: 0;">
+        <nav id="navbar" class="navbar navbar-expand-sm" style="z-index: 100;">
             <div class="container-fluid bg-white p-0 overflow-hidden shadow-sm">
-                <ul class="navbar-nav p-0 m-0">
+                <ul class="nav-btn-container navbar-nav p-0 m-0">
                     <li class="nav-item">
                         <a href="#schedules" onclick="activate(this)" class="btn active nav-btn border-0">Schedules</a>
                     </li>
@@ -40,7 +40,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <div class="input-group ms-5">
-                            <input class="form-control rounded-5 shadow-sm" type="text" placeholder="search...">
+                            <input class="searchbar form-control rounded-5 shadow-sm" type="text" placeholder="search...">
                             <button class="btn border-0">
                                 <i class="bi bi-search text-primary"></i>
                             </button>
@@ -50,12 +50,12 @@
             </div>
         </nav>
     </header>
-    <main>
+    <main style="margin-top: 80px;">
         <div class="main-page container mt-3">
             <!-- -----------------------------------Schedules Section------------------------------------------- -->
             <div class="row">
                 <div class="schedule-pane col">
-                    <div class="schedule-contents bg-white shadow-sm rounded-4 p-5">
+                    <div class="schedule-contents bg-white shadow rounded-4 p-5">
                         <div class="row mb-3">
                             <div class="col-sm-8">
                                 <small id="schedules" class="h1">My Schedule</small>
@@ -185,9 +185,25 @@
                 </div>
             </div><br><br><br><br>
             <!-- ------------------------------------Notes Section------------------------------------- -->
-            <div class="container position-relative p-3 bg-white rounded-4 shadow notes-section">
+            <div class="container position-relative p-3 bg-white rounded-4 shadow notes-section" style="min-height: 460px;">
                 <small id="notes" class="h1">Notes</small>
                 <small onclick="openCurtain('overlay', 'note')" class="bi bi-journal-plus h3 position-absolute add-icon"></small>
+                <div class="notes-content mt-4">
+                    <div class="container mb-4 note-item">
+                        <i class="bi bi-pencil text text-secondary"></i>
+                        <a href="#" class="head h6 ms-3">Some item head</a>
+                        <div class="routine-item-detail ms-5 p">
+                            <p>Replace the placeholder comment with the code for uploading the quote to your website. This could involve sending the quote to a server-side script or directly modifying the DOM of your website. The specific implementation will depend on your website's technology stack and architecture.</p>
+                        </div>
+                    </div>
+                    <div class="container mb-4 note-item">
+                        <i class="bi bi-pencil text text-secondary"></i>
+                        <a href="#" class="head h6 ms-3">Some item head</a>
+                        <div class="routine-item-detail ms-5 p">
+                            <p>Replace the placeholder comment with the code for uploading the quote to your website. This could involve sending the quote to a server-side script or directly modifying the DOM of your website. The specific implementation will depend on your website's technology stack and architecture.</p>
+                        </div>
+                    </div>
+                </div>
             </div><br><br><br>
         </div>
         <!--------------------------------- Schedule Form ------------------------------------------>
@@ -203,6 +219,46 @@
                             <input class="mb-3" type="text" placeholder="I want to..." required><br>
                             <small class="h6">Due Period</small>
                             <input type="datetime-local" required>
+                        </div>
+                        <input class="btn" type="submit" value="Add">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ----------------------------------Routine Form------------------------------------------ -->
+        <div id="routine" class="mini-form">
+            <div id="body">
+                <div id="head">
+                    <h1 id="title">+ Routine</h1>
+                </div>
+                <div>
+                    <form method="POST">
+                        <p class="fst-italic">Daily routines help you keep consistency and buld good habits</p>
+                        <div>
+                            <input class="mb-3" type="text" placeholder="e.g. walking to class..." required><br>
+                            <!-- <small class="h6">Due Period</small> -->
+                            <textarea placeholder="Enter details..." required></textarea>
+                        </div>
+                        <input class="btn" type="submit" value="Add">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ----------------------------------Note Form---------------------------------------------- -->
+        <div id="note" class="mini-form">
+            <div id="body">
+                <div id="head">
+                    <h1 id="title">New Note</h1>
+                </div>
+                <div>
+                    <form method="POST">
+                        <p class="fst-italic">Write down things you'd like to rember later.</p>
+                        <div>
+                            <input class="mb-3" type="text" placeholder="some text, phone number, etc..." required><br>
+                            <!-- <small class="h6">Due Period</small> -->
+                            <textarea placeholder="Enter details..."></textarea>
                         </div>
                         <input class="btn" type="submit" value="Add">
                     </form>

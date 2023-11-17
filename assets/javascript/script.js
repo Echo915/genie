@@ -20,17 +20,6 @@ function get_random_color(diminish=1) {
   return random_color;
 }
 
-// // Toggles display of overlay/curtain 
-// function openCurtain(curtain, form) {
-//   document.getElementById(curtain).style.width = "100%";
-//   document.getElementById(form).style.display = "1";
-// }
-
-// function closeCurtain(curtain, form) {
-//   document.getElementById(curtain).style.width = "0%";
-//   document.getElementById(form).style.display = "none";
-// }
-
 // Toggles display of overlay/curtain 
 function openCurtain(curtain, form) {
   document.getElementById(curtain).style.width = "100%";
@@ -39,8 +28,11 @@ function openCurtain(curtain, form) {
   }, 200);
 }
 
-function closeCurtain(curtain, form) {
-  document.getElementById(form).style.opacity = "0";
+function closeCurtain(curtain) {
+  var forms = document.querySelectorAll(".mini-form");
+  forms.forEach((form) => {
+    form.style.opacity = "0";
+  })
   setTimeout(() => {
     document.getElementById(curtain).style.width = "0";
   }, 400);

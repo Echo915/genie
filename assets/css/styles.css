@@ -15,6 +15,16 @@
   opacity: 0.7;
 }
 
+.fixed-nav {
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: auto;
+  position: fixed;
+}
+.fixed-nav .searchbar, .fixed-nav .nav-btn-container {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
 input::-moz-placeholder {
   font-style: italic;
 }
@@ -96,7 +106,7 @@ input::placeholder {
   overflow: hidden;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 1s;
-  z-index: 10;
+  z-index: 120;
 }
 .mini-form #head {
   display: flex;
@@ -130,7 +140,7 @@ input::placeholder {
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 6 !important;
+  z-index: 110 !important;
   top: 0;
   left: 0;
   background-color: rgb(0, 0, 0);

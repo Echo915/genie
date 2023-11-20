@@ -24,19 +24,39 @@ function get_random_color(diminish=1) {
 function openCurtain(curtain, form) {
   document.getElementById(curtain).style.width = "100%";
   setTimeout(() => {
-    document.getElementById(form).style.opacity = "1";
+    current_form = document.getElementById(form);
+    current_form.style.zIndex = "150";
+    current_form.style.opacity = "1";
   }, 200);
 }
 
 function closeCurtain(curtain) {
   var forms = document.querySelectorAll(".mini-form");
   forms.forEach((form) => {
+    form.style.zIndex = "0";
     form.style.opacity = "0";
   })
   setTimeout(() => {
     document.getElementById(curtain).style.width = "0";
   }, 400);
 }
+
+// Toggle menu display
+function toggle_menu_display() {
+  var menu = document.getElementById("menu");
+  if (menu.style.display === "block") {
+    menu.style.display = "none";
+  } else {
+    menu.style.display = "block";
+  }
+}
+
+// Update time 
+var time_div = document.getElementById("time");
+setInterval(() => {
+  const current_time = new Date().toLocaleTimeString('en-us', {hour12: false});
+  time_div.innerHTML = current_time;  
+}, 1000);
 
 // Applies a random color to the background of each item in task_divs list
 var task_divs = document.querySelectorAll(".task-item");

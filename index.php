@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>genie</title>
+    <!-- <meta http-equiv="refresh" content="0; url=index.php"> -->
+    <link rel="icon" type="image/png" href="assets/images/genie-logo-transparent.png">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/bootstrap/bootstrap-icons-1.11.1/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/styles.css">
@@ -23,18 +25,24 @@
     </div>
     <header id="header" class="header bg-light" style="z-index: 100; position: fixed; width: 100%; left: 0; top: 0;">
         <nav id="navbar" class="navbar navbar-expand-sm" style="z-index: 100;">
-            <div class="container-fluid bg-white p-0 overflow-hidden shadow-sm">
-                <ul class="nav-btn-container navbar-nav p-0 m-0">
-                    <li class="nav-item">
-                        <a href="#schedules" onclick="activate(this)" class="btn active nav-btn border-0">Schedules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#routines" onclick="activate(this)" class="btn nav-btn border-0">Routines</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#notes" onclick="activate(this)" class="btn nav-btn border-0">Notes</a>
-                    </li>
-                </ul>
+            <div class="container-fluid bg-white p-0 overflow-hidden">
+                <img src="assets/images/genie-logo-transparent.png" alt="logo" class="logo-icon">
+                <div class="menu-btn">
+                    <i class="bi bi-chevron-down h6" onclick="toggle_menu_display()"></i>
+                </div>
+                <div id="menu">
+                    <ul class="nav-btn-container navbar-nav p-0 m-0 shadow-sm">
+                        <li class="nav-item">
+                            <a href="#schedules" onclick="activate(this)" class="btn active nav-btn border-0">Schedules</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#routines" onclick="activate(this)" class="btn nav-btn border-0">Routines</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#notes" onclick="activate(this)" class="btn nav-btn border-0">Notes</a>
+                        </li>
+                    </ul>
+                </div>        
             </div>
             <div class="container-fluid">
                 <ul class="navbar-nav">
@@ -51,11 +59,15 @@
         </nav>
     </header>
     <main style="margin-top: 80px;">
+        <?php 
+            $connection = mysqli_connect("localhost", "root", "") or die(mysqli_error()); // Connects to database 
+            $db_select = mysqli_select_db($connection, "genie"); // Selects database
+        ?>
         <div class="main-page container mt-3">
             <!-- -----------------------------------Schedules Section------------------------------------------- -->
             <div class="row">
                 <div class="schedule-pane col">
-                    <div class="schedule-contents bg-white shadow rounded-4 p-5">
+                    <div class="schedule-contents bg-white shadow rounded-4 p-3">
                         <div class="row mb-3">
                             <div class="col-sm-8">
                                 <small id="schedules" class="h1">My Schedule</small>
@@ -68,64 +80,48 @@
                             <p>
                                 <i class="bi bi-sun text-primary"></i> Morning Routine
                             </p>
-                            <ul id="schedule-list">
-                                <li>
-                                    <div id="task-item" class="task-item">
-                                        <!-- task time -->
-                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
-                                        <!-- task item  -->
-                                        <h3 class="task-content" style="padding: 10px;">Item 1</h3>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div id="task-item" class="task-item">
-                                        <!-- task time -->
-                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
-                                        <!-- task item  -->
-                                        <h3 class="task-content" style="padding: 10px;">Item 2</h3>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div id="task-item" class="task-item">
-                                        <!-- task time -->
-                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
-                                        <!-- task item  -->
-                                        <h3 class="task-content" style="padding: 10px;">Item 3</h3>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div id="task-item" class="task-item">
-                                        <!-- task time -->
-                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
-                                        <!-- task item  -->
-                                        <h3 class="task-content" style="padding: 10px;">Item 1</h3>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div id="task-item" class="task-item">
-                                        <!-- task time -->
-                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
-                                        <!-- task item  -->
-                                        <h3 class="task-content" style="padding: 10px;">Item 2</h3>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div id="task-item" class="task-item">
-                                        <!-- task time -->
-                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;">{{ task.time }}</p>
-                                        <!-- task item  -->
-                                        <h3 class="task-content" style="padding: 10px;">Item 3</h3>
-                                    </div>
-                                </li>
-                            </ul>
+                            <div id="schedule-list">
+                                <?php 
+                                    $sql = "SELECT * FROM tbl_schedule";
+                                    $execution = mysqli_query($connection, $sql);
+
+                                    // Checks if execution was successful
+                                    if ($execution == true) {
+                                        // Gets all the data in a database
+                                        $schedule_rows_count = mysqli_num_rows($execution);
+
+                                        // Checks if there is data in the database or not
+                                        if ($schedule_rows_count > 0) {
+
+                                            // Loops through all the data in database
+                                            while ($schedule_row = mysqli_fetch_assoc($execution)) {
+                                                $task = $schedule_row["task"];
+                                                $time = $schedule_row["time"];
+
+                                                ?>
+                                                    <div id="task-item" class="task-item">
+                                                        <!-- task time -->
+                                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;"><?php echo $time ?></p>
+                                                        <!-- task item  -->
+                                                        <h3 class="task-content" style="padding: 10px;"><?php echo $task ?></h3>
+                                                    </div>
+                                                <?php
+                                            }
+                                        }
+                                    }
+                                ?>
+                            </div>
                             <p>
                                 <i class="bi bi-moon-fill text-primary"></i> Evening Routine
                             </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4 position-relative">
+                <div id="calendar-container" class="col-sm-4 position-relative">
                     <div id="calendar" class="shadow-sm position-sticky"></div>
+                    <div class="p-3">
+                        <p class="h1" id="time"></p>
+                    </div>
                 </div>
             </div><br><br><br><br>
 
@@ -134,7 +130,7 @@
                 <small id="routines" class="h1">Routines</small>
                 <small onclick="openCurtain('overlay', 'routine')" class="bi bi-person-walking h3 position-absolute add-icon">+</small>
                 <div class="routine-container row ">
-                    <span class="routine-item col-sm-4 p-5">
+                    <span class="routine-item col-sm-6 p-3">
                         <div class="head bg-light shadow">
                             <p class="h6">Some Head</p>
                         </div>
@@ -146,8 +142,8 @@
                             </ul>
                         </div>
                     </span>
-                    <span class="routine-item col-sm-4 p-5">
-                        <div class="head">
+                    <span class="routine-item col-sm-6 p-3">
+                        <div class="head bg-light shadow">
                             <p>Some Head</p>
                         </div>
                         <div class="routine-details">
@@ -158,8 +154,8 @@
                             </ul>
                         </div>
                     </span>
-                    <span class="routine-item col-sm-4 p-5">
-                        <div class="head">
+                    <span class="routine-item col-sm-6 p-3">
+                        <div class="head bg-light shadow">
                             <p>Some Head</p>
                         </div>
                         <div class="routine-details">
@@ -170,8 +166,8 @@
                             </ul>
                         </div>
                     </span>
-                    <span class="routine-item col-sm-4">
-                        <div class="head">
+                    <span class="routine-item col-sm-6">
+                        <div class="head bg-light shadow">
                             <p>Some Head</p>
                         </div>
                         <div class="details">
@@ -189,6 +185,36 @@
                 <small id="notes" class="h1">Notes</small>
                 <small onclick="openCurtain('overlay', 'note')" class="bi bi-journal-plus h3 position-absolute add-icon"></small>
                 <div class="notes-content mt-4">
+                <?php 
+                    $sql = "SELECT * FROM tbl_note";
+                    $execution = mysqli_query($connection, $sql);
+
+                    // Checks if execution was successful
+                    if ($execution == true) {
+                        // Gets all the data in a database
+                        $note_rows_count = mysqli_num_rows($execution);
+
+                        // Checks if there is data in the database or not
+                        if ($note_rows_count > 0) {
+
+                            // Loops through all the note data in database
+                            while ($note_row = mysqli_fetch_assoc($execution)) {
+                                $title = $note_row["title"];
+                                $content = $note_row["content"];
+
+                                ?>
+                                    <div class="container mb-4 note-item">
+                                        <i class="bi bi-pencil text text-secondary"></i>
+                                        <a href="#" class="head h6 ms-3"><?php echo $title ?></a>
+                                        <div class="routine-item-detail ms-5 p">
+                                            <p><?php echo $content ?></p>
+                                        </div>
+                                    </div>
+                                <?php
+                            }
+                        }
+                    }
+                ?>
                     <div class="container mb-4 note-item">
                         <i class="bi bi-pencil text text-secondary"></i>
                         <a href="#" class="head h6 ms-3">Some item head</a>
@@ -213,14 +239,14 @@
                     <h1 id="title">New Task</h1>
                 </div>
                 <div>
-                    <form method="POST">
+                    <form action="index.php" method="POST">
                         <p class="fst-italic">Keep track of your tasks and give your brain a break!!</p>
                         <div>
-                            <input class="mb-3" type="text" placeholder="I want to..." required><br>
+                            <input class="mb-3" type="text" name="task" placeholder="I want to..." required><br>
                             <small class="h6">Due Period</small>
-                            <input type="datetime-local" required>
+                            <input type="datetime-local" name="time" required>
                         </div>
-                        <input class="btn" type="submit" value="Add">
+                        <input class="btn" type="submit" name="schedule-form" value="Add">
                     </form>
                 </div>
             </div>
@@ -240,7 +266,7 @@
                             <!-- <small class="h6">Due Period</small> -->
                             <textarea placeholder="Enter details..." required></textarea>
                         </div>
-                        <input class="btn" type="submit" value="Add">
+                        <input class="btn" type="submit" name="routine-form" value="Add">
                     </form>
                 </div>
             </div>
@@ -256,11 +282,11 @@
                     <form method="POST">
                         <p class="fst-italic">Write down things you'd like to rember later.</p>
                         <div>
-                            <input class="mb-3" type="text" placeholder="some text, phone number, etc..." required><br>
+                            <input class="mb-3" type="text" name="title" placeholder="some text, phone number, etc..." required><br>
                             <!-- <small class="h6">Due Period</small> -->
-                            <textarea placeholder="Enter details..."></textarea>
+                            <textarea name="content" placeholder="Enter details..."></textarea>
                         </div>
-                        <input class="btn" type="submit" value="Add">
+                        <input class="btn" type="submit" name="note-form" value="Add">
                     </form>
                 </div>
             </div>
@@ -284,3 +310,7 @@
     </script>
 </body>
 </html>
+
+<?php
+    include("forms.php");
+?>

@@ -22,7 +22,12 @@
         display: none;
     }
 
+    .logo-icon {
+        left: 4px !important;
+    }
+
     .menu-btn {
         display: block !important;
+        left: 40px !important;
     }
 }

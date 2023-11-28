@@ -1,10 +1,8 @@
+// ------------------------------------------- Functions and Classes -------------------------------------------------
 function activate (elmnt) {
     var headers = document.getElementsByClassName("nav-btn");
     for(i = 0; i < headers.length; i++) {
-        var current_elmnt = headers[i]
         headers[i].classList.remove("active");
-        console.log(headers[i].classList);
-        // current_elmnt.classList.remove("active");
     }
 
     elmnt.classList.add("active");
@@ -51,12 +49,40 @@ function toggle_menu_display() {
   }
 }
 
+// Handles Checking and unchecking boxes
+function check_boxes(class_name) {
+  var checkboxes = document.querySelectorAll(`.${class_name}`);
+  for (i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].setAttribute("checked", "checked");
+  }
+}
+
+function uncheck_boxes(class_name) {
+  var checkboxes = document.querySelectorAll(`.${class_name}`);
+  for (i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].removeAttribute("checked");
+  }
+}
+
+// Handles checking of corresponding days
+function check_corresponding_days(class_name) {
+  uncheck_boxes("day");
+  check_boxes(class_name);
+}
+
+
+
+
+
+// -------------------------------------------------- Main Code ----------------------------------------------------------
+
 // Update time 
 var time_div = document.getElementById("time");
 setInterval(() => {
   const current_time = new Date().toLocaleTimeString('en-us', {hour12: false});
   time_div.innerHTML = current_time;  
 }, 1000);
+
 
 // Applies a random color to the background of each item in task_divs list
 var task_divs = document.querySelectorAll(".task-item");

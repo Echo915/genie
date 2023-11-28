@@ -14,9 +14,6 @@
         // $db_select = mysqli_select_db($connection, "genie"); // Selects database
 
         $excution = mysqli_query($connection, $sql) or die(mysqli_error()); // write form details into database
-
-        header("location: index.php");
-        exit;
     } else {
         if (isset($_POST["schedule-form"])){
             $task = $_POST["task"];
@@ -24,12 +21,10 @@
 
             $sql = "INSERT INTO tbl_schedule SET
                 task = '$task',
-                time = '$time'
+                time = '$time',
             ";
 
             $excution = mysqli_query($connection, $sql);
-
-            header("refresh: 1");
         }
     }
 ?>

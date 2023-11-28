@@ -11,8 +11,9 @@ $full-opacity: 1;
 
  
 .header {
-    margin: auto;
+    margin: auto; 
     width: fit-content;
+    border-bottom: 1px solid lavender; 
 
     div {
         border-radius: $nav-border-radius;
@@ -44,6 +45,10 @@ $full-opacity: 1;
             color: $primary-color;
         }
     }
+
+    input::placeholder {
+        font-style: italic;
+    } 
 }
 
 .fixed-nav {
@@ -56,14 +61,16 @@ $full-opacity: 1;
     }
 }
 
-input::placeholder {
-    font-style: italic;
-}
-
 .active {
     background-color: $primary-color !important;
     color: #fff !important;
 }
+
+.quote-author {
+    text-decoration: none;
+}
+
+.quote-author:hover, .quote-author:focus {opacity: $highlight-opacity}
 
 .schedule-contents {
     min-height: 100vh;

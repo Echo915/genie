@@ -3,6 +3,7 @@
   margin: auto;
   width: -moz-fit-content;
   width: fit-content;
+  border-bottom: 1px solid lavender;
 }
 .header div {
   border-radius: 20px;
@@ -32,6 +33,12 @@
 .header .menu-btn i {
   color: #C6936A;
 }
+.header input::-moz-placeholder {
+  font-style: italic;
+}
+.header input::placeholder {
+  font-style: italic;
+}
 
 .fixed-nav {
   width: -moz-fit-content;
@@ -43,17 +50,17 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-input::-moz-placeholder {
-  font-style: italic;
-}
-
-input::placeholder {
-  font-style: italic;
-}
-
 .active {
   background-color: #C6936A !important;
   color: #fff !important;
+}
+
+.quote-author {
+  text-decoration: none;
+}
+
+.quote-author:hover, .quote-author:focus {
+  opacity: 0.7;
 }
 
 .schedule-contents {

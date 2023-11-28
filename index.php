@@ -97,15 +97,20 @@
                                             while ($schedule_row = mysqli_fetch_assoc($execution)) {
                                                 $task = $schedule_row["task"];
                                                 $time = $schedule_row["time"];
+                                                $epoch_time = strtotime($time);
+                                                $current_time = time();
+                                                $status = $schedule_row["status"];
 
-                                                ?>
-                                                    <div id="task-item" class="task-item">
-                                                        <!-- task time -->
-                                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;"><?php echo $time ?></p>
-                                                        <!-- task item  -->
-                                                        <h3 class="task-content" style="padding: 10px;"><?php echo $task ?></h3>
-                                                    </div>
-                                                <?php
+                                                if ($epoch_time > $current_time) {
+                                                    ?>
+                                                        <div id="task-item" class="task-item">
+                                                            <!-- task time -->
+                                                            <p class="task-content" style="font-size: 11px; padding: 0 10px;"><?php echo $time?></p>
+                                                            <!-- task item  -->
+                                                            <h3 class="task-content" style="padding: 10px;"><?php echo $task ?></h3>
+                                                        </div>
+                                                    <?php
+                                                }
                                             }
                                         }
                                     }
@@ -122,6 +127,22 @@
                     <div class="p-3">
                         <p class="h1" id="time"></p>
                     </div>
+
+                    <div class="quote-container mt-3">
+                        <?php
+                            $curl = curl_init();
+                            curl_setopt($curl, CURLOPT_URL, 'https://zenquotes.io/api/today');
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                            $output = curl_exec($curl);
+                            curl_close($curl);
+                            
+                            $data = json_decode($output, true);
+                            // $randomIndex = rand(0, count($data) - 1);
+                            $todayQuote = $data[0];
+                        ?>
+                        <!-- urlencode() formats a text in url format -->
+                        <p style="white-space: pre-wrap;"><?php echo $todayQuote['q'] . "\n—\n" ?><a target="_blank" href="https://www.google.com/search?q=<?php echo urlencode($todayQuote['a']) ?>" class="text-success quote-author"><small class="fst-itaic"><?php echo $todayQuote['a'] ?></small></a></p>
+                    </div>
                 </div>
             </div><br><br><br><br>
 
@@ -132,7 +153,16 @@
                 <div class="routine-container row ">
                     <span class="routine-item col-sm-6 p-3">
                         <div class="head bg-light shadow">
-                            <p class="h6">Some Head</p>
+                            <p class="h6">Some Head
+                                <span class="action-container ms-3">
+                                    <span class="">
+                                        <i role="button" class="bi bi-pencil-square text-success"></i>
+                                    </span>
+                                    <span class="">
+                                        <i role="button" class="bi bi-trash-fill text-danger"></i>
+                                    </span>
+                                </span>
+                            </p>
                         </div>
                         <div class="routine-details">
                             <ul class="details py-3">
@@ -204,8 +234,18 @@
 
                                 ?>
                                     <div class="container mb-4 note-item">
-                                        <i class="bi bi-pencil text text-secondary"></i>
-                                        <a href="#" class="head h6 ms-3"><?php echo $title ?></a>
+                                        <p class="head h6 ms-3">
+                                            <i class="bi bi-book text text-secondary"></i>
+                                            <?php echo $title ?>
+                                            <span class="action-container ms-3">
+                                                <span class="">
+                                                    <i role="button" class="bi bi-pencil-square text-success"></i>
+                                                </span>
+                                                <span class="">
+                                                    <i role="button" class="bi bi-trash-fill text-danger"></i>
+                                                </span>
+                                            </span>
+                                        </p>
                                         <div class="routine-item-detail ms-5 p">
                                             <p><?php echo $content ?></p>
                                         </div>
@@ -232,6 +272,7 @@
                 </div>
             </div><br><br><br>
         </div>
+
         <!--------------------------------- Schedule Form ------------------------------------------>
         <div id="schedule" class="mini-form">
             <div id="body">
@@ -262,9 +303,38 @@
                     <form method="POST">
                         <p class="fst-italic">Daily routines help you keep consistency and buld good habits</p>
                         <div>
-                            <input class="mb-3" type="text" placeholder="e.g. walking to class..." required><br>
-                            <!-- <small class="h6">Due Period</small> -->
-                            <textarea placeholder="Enter details..." required></textarea>
+                            <style>
+                                small {
+                                    font-size: x-small;
+                                }
+                            </style>
+                            <div class="mb-3">
+                                <select name="" size="1" style="max-width: 80%;">
+                                    <option>-- Select Routine -- </option>
+                                    <option value="morningRoutine">Morning Routine</option>
+                                    <option value="eveningRoutine">Evening Routine</option>
+                                    <option value="fortune">fortune</option>
+                                    <option value="klabi">klabi</option>
+                                    <option value="echo">echo</option>
+                                </select>
+                                <i class="bi bi-plus h3 text-primary" style="cursor: pointer;"></i>
+                            </div>
+                            
+                            <input class="mb-3" type="text" width="width" placeholder="Enter Routine Task" required><br>
+                            <div>
+                                <small> Everyday</small> <input onclick="check_corresponding_days('day')" id="everyday" type="radio" value="Everyday" name="dayGroup" checked="checked">
+                                <small> Weekdays</small> <input onclick="check_corresponding_days('weekday')" id="weekdays" type="radio" value="Weekdays" name="dayGroup">
+                                <small> Weekends</small> <input onclick="check_corresponding_days('weekend')" id="weekends" type="radio" value="Weekends" name="dayGroup">
+                            </div>
+                            <div>
+                                <small>Mon</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Mon">
+                                <small>Tue</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Tue">
+                                <small>Wed</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Wed">
+                                <small>Thur</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Thur">
+                                <small>Fri</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Fri">
+                                <small>Sat</small> <input class="day weekend" type="checkbox" name="ass_day[]" value="Sat">
+                                <small>Sun</small> <input class="day weekend" type="checkbox" name="ass_day[]" value="Sun">
+                            </div>
                         </div>
                         <input class="btn" type="submit" name="routine-form" value="Add">
                     </form>
@@ -281,11 +351,13 @@
                 <div>
                     <form method="POST">
                         <p class="fst-italic">Write down things you'd like to rember later.</p>
-                        <div>
+                        <div class="mb-3">
                             <input class="mb-3" type="text" name="title" placeholder="some text, phone number, etc..." required><br>
                             <!-- <small class="h6">Due Period</small> -->
                             <textarea name="content" placeholder="Enter details..."></textarea>
                         </div>
+                        temporal <input class="me-3" checked="checked" type="radio" value="temporal" name="status">
+                        permanent <input type="radio" value="permanent" name="status"><br>
                         <input class="btn" type="submit" name="note-form" value="Add">
                     </form>
                 </div>

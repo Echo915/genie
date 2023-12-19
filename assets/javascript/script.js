@@ -21,8 +21,9 @@ function get_random_color(diminish=1) {
 // Toggles display of overlay/curtain 
 function openCurtain(curtain, form) {
   document.getElementById(curtain).style.width = "100%";
+  current_form = document.getElementById(form);
+  current_form.classList.add("mini-form-active");
   setTimeout(() => {
-    current_form = document.getElementById(form);
     current_form.style.zIndex = "150";
     current_form.style.opacity = "1";
   }, 200);
@@ -31,6 +32,7 @@ function openCurtain(curtain, form) {
 function closeCurtain(curtain) {
   var forms = document.querySelectorAll(".mini-form");
   forms.forEach((form) => {
+    form.classList.remove("mini-form-activate");
     form.style.zIndex = "0";
     form.style.opacity = "0";
   })
@@ -68,6 +70,28 @@ function uncheck_boxes(class_name) {
 function check_corresponding_days(class_name) {
   uncheck_boxes("day");
   check_boxes(class_name);
+}
+
+// Adds new routine title to choices
+function addRoutine() {
+  var routine_input = document.getElementById("routine-add");
+
+  if (routine_input.style.display === "none") {
+    routine_input.style.display = "block";
+  } else {
+    var routine_tray = document.getElementById("routines-container");
+    routines = Array.from(routine_tray.children); // Converts Node item (routine_tray.children) to array
+    var new_routine = routine_input.value;
+    
+    if (new_routine !== "" && !routines.includes(new_routine)){
+      // Creates a new option object and adds it to routine_tray select tag
+      var new_option = new Option(new_routine, new_routine);
+      routine_tray.add(new_option, undefined);
+    }
+    
+    routine_input.value = "";
+    routine_input.style.display = "none";
+  }
 }
 
 

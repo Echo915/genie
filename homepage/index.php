@@ -1,39 +1,18 @@
 <?php
-require_once "db-connection.php";
-require_once "controllers.php";
-require_once "..//config.php";
+require_once "..//includes/head.php";
 ?>
 
-<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>genie</title>
-    <!-- <meta http-equiv="refresh" content="0; url=index.php"> -->
-    <link rel="icon" type="image/png" href="..//assets/images/genie-logo-transparent.png">
-    <link rel="stylesheet" href="..//assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="..//assets/bootstrap/bootstrap-icons-1.11.1/bootstrap-icons.css">
-    <link rel="stylesheet" href="..//assets/css/styles.css">
-
-    <!-- Calendar plugin -->
-    <!-- Plugin CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/themes/light.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/themes/dark.min.css" rel="stylesheet">
-    <!-- Plugin JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js" defer></script>
-</head>
 <body class="bg-light">
     <div id="overlay" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeCurtain('overlay')">&times;</a>
+        <a href="javascript:void(0)" class="closebutn" onclick="closeCurtain('overlay')">&times;</a>
         <div id="overlay-content" class="overlay-content"></div>
     </div>
     <header id="header" class="header bg-light" style="z-index: 100; position: fixed; width: 100%; left: 0; top: 0;">
         <nav id="navbar" class="navbar navbar-expand-sm" style="z-index: 100;">
             <div class="container-fluid bg-white p-0 overflow-hidden">
                 <img src="..//assets/images/genie-logo-transparent.png" alt="logo" class="logo-icon">
-                <div class="menu-btn">
+                <div class="menu-butn">
                     <i class="bi bi-chevron-down h6" onclick="toggle_menu_display()"></i>
                 </div>
                 <div id="menu">
@@ -65,10 +44,6 @@ require_once "..//config.php";
         </nav>
     </header>
     <main style="margin-top: 80px;">
-        <?php 
-            // $connection = mysqli_connect("localhost", "root", "") or die(mysqli_error()); // Connects to database 
-            // $db_select = mysqli_select_db($connection, "genie"); // Selects database
-        ?>
         <div class="main-page container mt-3">
             <!-- -----------------------------------Schedules Section------------------------------------------- -->
             <div class="row">
@@ -88,37 +63,42 @@ require_once "..//config.php";
                             </p>
                             <div id="schedule-list">
                                 <?php
-                                    $sql = "SELECT * FROM tbl_schedule";
-                                    $execution = mysqli_query($connection, $sql);
+                                    $table = "tbl_schedule";
+                                    $task = new Schedule($connection, $table);
+                                    $taskController = new ScheduleController($task);
+                                    $all_tasks = $taskController->model->get_all_objects();
+                                    $count = count($all_tasks);
 
-                                    // Checks if execution was successful
-                                    if ($execution == true) {
-                                        // Gets all the data in a database
-                                        $schedule_rows_count = mysqli_num_rows($execution);
+                                    if ($count > 0) {
+                                        foreach($all_tasks as $current_task) {
+                                            $task = $current_task["task"];
+                                            $time = strtotime($current_task["time"]);
+                                            // $time = (int)$time;
+                                            $status = $current_task["status"];
 
-                                        // Checks if there is data in the database or not
-                                        if ($schedule_rows_count > 0) {
+                                            $valid = 0;
+                                            $refresh_time = "23:59:59";
+                                            $date = date(DATE_ATOM);
+                                            $date = mb_substr($date, 0, 10);
+                                            $refresh_epoch_time = strtotime($date." ".$refresh_time);
+                                            // $refresh_epoch_time = (int)$refresh_epoch_time;
 
-                                            // Loops through all the data in database
-                                            while ($schedule_row = mysqli_fetch_assoc($execution)) {
-                                                $task = $schedule_row["task"];
-                                                $time = $schedule_row["time"];
-                                                $epoch_time = strtotime($time);
-                                                $current_time = time();
-                                                $status = $schedule_row["status"];
-
-                                                if ($epoch_time > $current_time) {
-                                                    ?>
-                                                        <div id="task-item" class="task-item">
-                                                            <!-- task time -->
-                                                            <p class="task-content" style="font-size: 11px; padding: 0 10px;"><?php echo $time?></p>
-                                                            <!-- task item  -->
-                                                            <h3 class="task-content" style="padding: 10px;"><?php echo $task ?></h3>
-                                                        </div>
-                                                    <?php
-                                                }
+                                            if ($time < $refresh_epoch_time && $time > ($refresh_epoch_time - 86399)) {
+                                                ?>
+                                                    <div id="task-item" class="task-item">
+                                                        <!-- task time -->
+                                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;"><?php echo $time?></p>
+                                                        <!-- task item  -->
+                                                        <h3 class="task-content" style="padding: 10px;"><?php echo $task ?></h3>
+                                                    </div>
+                                                <?php
                                             }
+                                            $valid = 1;
                                         }
+                                    } 
+                                    
+                                    if ($valid === 0) {
+                                        echo "No tasks yet!";
                                     }
                                 ?>
                             </div>
@@ -156,66 +136,47 @@ require_once "..//config.php";
             <div class="main-routine-section bg-white rounded-4 shadow p-3 position-relative">
                 <small id="routines" class="h1">Routines</small>
                 <small onclick="openCurtain('overlay', 'routine')" class="bi bi-person-walking h3 position-absolute add-icon">+</small>
-                <div class="routine-container row ">
-                    <span class="routine-item col-sm-6 p-3">
-                        <div class="head bg-light shadow">
-                            <p class="h6">Some Head
-                                <span class="action-container ms-3">
-                                    <span class="">
-                                        <i role="button" class="bi bi-pencil-square text-success"></i>
-                                    </span>
-                                    <span class="">
-                                        <i role="button" class="bi bi-trash-fill text-danger"></i>
-                                    </span>
-                                </span>
-                            </p>
+                <div class="routine-container row mt-4 ">
+                    <?php
+                    $routine_sql = "SELECT * FROM tbl_routine ORDER BY id ASC";
+                    $routine_ex = mysqli_query($connection, $routine_sql);
+
+                    while ($routine_row = $routine_ex->fetch_assoc()){ ?>
+                        <div class="col-sm-6 p-3">
+                            <div class="card">
+                                <div class="card-header shadow">
+                                    <p class="h6"><?php echo $routine_row["routine_title"] ?>
+                                        <span class="action-container ms-3">
+                                            <span class="">
+                                                <i role="button" class="bi bi-pencil-square text-success"></i>
+                                            </span>
+                                            <span class="">
+                                                <i role="button" class="bi bi-trash-fill text-danger"></i>
+                                            </span>
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="card-body routine-details">
+                                    <ul>
+                                        <?php 
+                                        $routine_item_sql = "SELECT * FROM tbl_routine_item WHERE routine_id = ".$routine_row['id']; 
+                                        $routine_item_ex = mysqli_query($connection, $routine_item_sql);
+
+                                        while ($routine_item_row = $routine_item_ex->fetch_assoc()){ ?>
+                                            <li><?php echo $routine_item_row["routine_item_title"]?></li>
+                                        <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div class="routine-details">
-                            <ul class="details py-3">
-                                <li>some text</li>
-                                <li>some more text</li>
-                                <li>Even more text</li>
-                            </ul>
-                        </div>
-                    </span>
-                    <span class="routine-item col-sm-6 p-3">
-                        <div class="head bg-light shadow">
-                            <p>Some Head</p>
-                        </div>
-                        <div class="routine-details">
-                            <ul class="details py-3">
-                                <li>some text</li>
-                                <li>some more text</li>
-                                <li>Even more text</li>
-                            </ul>
-                        </div>
-                    </span>
-                    <span class="routine-item col-sm-6 p-3">
-                        <div class="head bg-light shadow">
-                            <p>Some Head</p>
-                        </div>
-                        <div class="routine-details">
-                            <ul class="details py-3">
-                                <li>some text</li>
-                                <li>some more text</li>
-                                <li>Even more text</li>
-                            </ul>
-                        </div>
-                    </span>
-                    <span class="routine-item col-sm-6">
-                        <div class="head bg-light shadow">
-                            <p>Some Head</p>
-                        </div>
-                        <div class="details">
-                            <ul class="details">
-                                <li>some text</li>
-                                <li>some more text</li>
-                                <li>Even more text</li>
-                            </ul>
-                        </div>
-                    </span>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div><br><br><br><br>
+
             <!-- ------------------------------------Notes Section------------------------------------- -->
             <div class="container position-relative p-3 bg-white rounded-4 shadow notes-section" style="min-height: 460px;">
                 <small id="notes" class="h1">Notes</small>
@@ -261,40 +222,26 @@ require_once "..//config.php";
                         }
                     }
                 ?>
-                    <div class="container mb-4 note-item">
-                        <i class="bi bi-pencil text text-secondary"></i>
-                        <a href="#" class="head h6 ms-3">Some item head</a>
-                        <div class="routine-item-detail ms-5 p">
-                            <p>Replace the placeholder comment with the code for uploading the quote to your website. This could involve sending the quote to a server-side script or directly modifying the DOM of your website. The specific implementation will depend on your website's technology stack and architecture.</p>
-                        </div>
-                    </div>
-                    <div class="container mb-4 note-item">
-                        <i class="bi bi-pencil text text-secondary"></i>
-                        <a href="#" class="head h6 ms-3">Some item head</a>
-                        <div class="routine-item-detail ms-5 p">
-                            <p>Replace the placeholder comment with the code for uploading the quote to your website. This could involve sending the quote to a server-side script or directly modifying the DOM of your website. The specific implementation will depend on your website's technology stack and architecture.</p>
-                        </div>
-                    </div>
-                </div>
             </div><br><br><br>
         </div>
 
         <!--------------------------------- Schedule Form ------------------------------------------>
         <div id="schedule" class="mini-form">
-            <div id="body">
-                <div id="head">
+            <div class="card">
+                <div id="head" class="card-header">
                     <h1 id="title">New Task</h1>
                 </div>
-                <div>
+                <div class="card-body">
                     <form method="POST">
-                        <p class="fst-italic">Keep track of your tasks and give your brain a break!!</p>
-                        <div>
-                            <input class="mb-3" type="text" name="task" placeholder="I want to..." required><br>
-                            <small class="h6">Due Period</small>
-                            <input type="datetime-local" name="time" required>
+                        <p class="fst-italic text-align-center">Keep track of your tasks and give your brain a break!!</p>
+                        <div class="form-group">
+                            <label for="task">Task:</label>
+                            <input class="form-control" type="text" name="task" id="task" placeholder="I want to..." required><br>
+                            <label for="time" class="">Due At...</label>
+                            <input class="form-control" type="datetime-local" name="time" id="time" required>
                         </div>
-                        <input type="hidden" name="formToken" value="<?php echo generateFormToken(); ?>">
-                        <input class="btn" type="submit" name="schedule-form" value="Add">
+                        <input class="form-control" type="hidden" name="formToken" value="<?php echo generateFormToken(20); ?>">
+                        <input class="butn" type="submit" name="schedule-form" value="Add">
                     </form>
                 </div>
             </div>
@@ -302,38 +249,46 @@ require_once "..//config.php";
 
         <!-- ----------------------------------Routine Form------------------------------------------ -->
         <div id="routine" class="mini-form">
-            <div id="body">
-                <div id="head">
+            <div class="card">
+                <div id="head" class="card-header">
                     <h1 id="title">+ Routine</h1>
                 </div>
                 <div>
-                    <form method="POST">
-                        <p class="fst-italic">Daily routines help you keep consistency and buld good habits</p>
-                        <div>
+                    <form id="routine-form" method="POST">
+                        <div class="card-body">
                             <style>
                                 small {
                                     font-size: x-small;
                                 }
                             </style>
-                            <div class="mb-3">
-                                <select name="" size="1" style="max-width: 80%;">
-                                    <option>-- Select Routine -- </option>
-                                    <option value="morningRoutine">Morning Routine</option>
-                                    <option value="eveningRoutine">Evening Routine</option>
-                                    <option value="fortune">fortune</option>
-                                    <option value="klabi">klabi</option>
-                                    <option value="echo">echo</option>
+                            <p class="fst-italic">Daily routines help you keep consistency and build good habits</p>
+                            <div class="form-group">
+                                <select id="routines-container" name="routine-group" size="1" style="max-width: 80%;" class="form-control" required>
+                                    <option selected disabled>-- Select Routine -- </option>
+                                    <?php 
+                                    ?>
+                                    <option class="routine-title" value="morningRoutine">Morning Routine</option>
+                                    <option class="routine-title" value="eveningRoutine">Evening Routine</option>
+                                    <option class="routine-title" value="fortune">fortune</option>
+                                    <option class="routine-title" value="klabi">klabi</option>
+                                    <option class="routine-title" value="echo">echo</option>
                                 </select>
-                                <i class="bi bi-plus h3 text-primary" style="cursor: pointer;"></i>
-                            </div>
+                                <div class="input-group">
+                                    <i class="bi bi-plus h3 text-primary" role="button" onclick="addRoutine()"></i>
+                                    <div class="routine-add">
+                                        <input id="routine-add" name="empty" style="display: none; border: 1.5px solid lavender;" class="rounded-1 mt-1" type="text" width="width" placeholder="New Routine">
+                                        <!-- <button type="button" class="btn btn-primary">Add</button> -->
+                                    </div>
+                                </div>
                             
-                            <input class="mb-3" type="text" width="width" placeholder="Enter Routine Task" required><br>
-                            <div>
+                                   <input name="routine-title" class="form-control" type="text" width="width" placeholder="Enter Routine Task" required><br>
+                            </div>
+                            <div class="form-group">
                                 <small> Everyday</small> <input onclick="check_corresponding_days('day')" id="everyday" type="radio" value="Everyday" name="dayGroup" checked="checked">
                                 <small> Weekdays</small> <input onclick="check_corresponding_days('weekday')" id="weekdays" type="radio" value="Weekdays" name="dayGroup">
                                 <small> Weekends</small> <input onclick="check_corresponding_days('weekend')" id="weekends" type="radio" value="Weekends" name="dayGroup">
                             </div>
-                            <div>
+                            <div class="form-group">
                                 <small>Mon</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Mon">
                                 <small>Tue</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Tue">
                                 <small>Wed</small> <input class="day weekday" type="checkbox" name="ass_day[]" value="Wed">
@@ -342,8 +297,9 @@ require_once "..//config.php";
                                 <small>Sat</small> <input class="day weekend" type="checkbox" name="ass_day[]" value="Sat">
                                 <small>Sun</small> <input class="day weekend" type="checkbox" name="ass_day[]" value="Sun">
                             </div>
+                            <input class="form-control" type="hidden" name="formToken" value="<?php echo generateFormToken(20); ?>">
+                            <input class="butn" type="submit" name="routine-form" value="Add" form="routine-form">
                         </div>
-                        <input class="btn" type="submit" name="routine-form" value="Add">
                     </form>
                 </div>
             </div>
@@ -351,22 +307,22 @@ require_once "..//config.php";
 
         <!-- ----------------------------------Note Form---------------------------------------------- -->
         <div id="note" class="mini-form">
-            <div id="body">
-                <div id="head">
+            <div class="card">
+                <div id="head" class="card-header">
                     <h1 id="title">New Note</h1>
                 </div>
-                <div>
+                <div class="card-body">
                     <form method="POST">
                         <p class="fst-italic">Write down things you'd like to rember later.</p>
-                        <div class="mb-3">
-                            <input class="mb-3" type="text" name="title" placeholder="some text, phone number, etc..." required><br>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="title" placeholder="some text, phone number, etc..." required><br>
                             <!-- <small class="h6">Due Period</small> -->
-                            <textarea name="content" placeholder="Enter details..."></textarea>
+                            <textarea class="form-control" name="content" placeholder="Enter details..."></textarea>
                         </div>
                         temporal <input class="me-3" checked="checked" type="radio" value="temporal" name="status">
                         permanent <input type="radio" value="permanent" name="status"><br>
-                        <input type="hidden" name="formToken" value="<?php echo generateFormToken(); ?>">
-                        <input class="btn" type="submit" name="note-form" value="Add">
+                        <input type="hidden" name="formToken" value="<?php echo generateFormToken(20); ?>">
+                        <input class="butn" type="submit" name="note-form" value="Add">
                     </form>
                 </div>
             </div>

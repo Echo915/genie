@@ -24,13 +24,13 @@
   width: 40px;
   height: 40px;
 }
-.header .menu-btn {
+.header .menu-butn {
   position: absolute;
   left: 65px;
   top: 9px;
   display: none;
 }
-.header .menu-btn i {
+.header .menu-butn i {
   color: #C6936A;
 }
 .header input::-moz-placeholder {
@@ -118,15 +118,17 @@
   transition: 2s;
 }
 
-.mini-form {
-  position: fixed;
+.mini-form-active {
   top: 0;
   left: 50%;
-  transform: translate(-50%, 160px);
+  transform: translate(-50%, 140px);
+}
+
+.mini-form {
+  position: fixed;
+  width: 65%;
   opacity: 0;
-  width: 300px;
   border: 2px solid lavender;
-  text-align: center;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -141,10 +143,10 @@
   background-color: #C6936A;
   color: aliceblue;
 }
-.mini-form #body {
-  background-color: #f1f1f1;
+.mini-form label {
+  font-weight: 500;
 }
-.mini-form .btn {
+.mini-form .butn {
   background-color: white;
   border: 1px solid lavender;
   border-radius: 10px;
@@ -152,12 +154,12 @@
   margin: 5px;
   transition: 0.3s;
 }
-.mini-form .btn:hover {
+.mini-form .butn:hover {
   color: aliceblue;
   background-color: #C6936A;
   opacity: 0.5;
 }
-.mini-form .btn:active {
+.mini-form .butn:active {
   opacity: 1;
 }
 
@@ -173,7 +175,7 @@
   overflow-x: hidden;
   transition: 0.5s;
 }
-.overlay .closebtn {
+.overlay .closebutn {
   position: absolute;
   top: 20px;
   right: 45px;
@@ -183,20 +185,11 @@
   transition: 0.3s;
   color: #818181;
 }
-.overlay .closebtn:hover {
+.overlay .closebutn:hover {
   color: #f1f1f1;
 }
-.overlay .closebtn:focus {
+.overlay .closebutn:focus {
   color: #f1f1f1;
-}
-
-.routine-item .head {
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  background-color: #fff;
-  min-height: 50px;
-  box-shadow: 0, 4, 8, 0, rgba(0, 0, 0, 0.2);
 }
 
 .add-icon {

@@ -35,7 +35,7 @@ $full-opacity: 1;
         height: 40px;
     }
 
-    .menu-btn {
+    .menu-butn {
         position: absolute;
         left: 65px;
         top: 9px;
@@ -120,15 +120,18 @@ $full-opacity: 1;
     transition: 2s;
 }
 
-.mini-form {
-    position: fixed;
+.mini-form-active {
     top: 0;
     left: 50%;
-    transform: translate(-50%, 160px);
+    transform: translate(-50%, 140px);
+}
+
+.mini-form {
+    position: fixed;
+    width: 65%; 
     opacity: $no-opacity;
-    width: 300px;
+    // width: 300px;
     border: 2px solid lavender;
-    text-align: center;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -143,12 +146,10 @@ $full-opacity: 1;
         background-color: $primary-color;
         color: aliceblue;
     }
+
+    label {font-weight: 500;}
     
-    #body {
-        background-color: #f1f1f1;
-    }
-    
-    .btn {
+    .butn {
         background-color: white;
         border: 1px solid lavender;
         border-radius: 10px;
@@ -157,13 +158,13 @@ $full-opacity: 1;
         transition: 0.3s;
     }
     
-    .btn:hover {
+    .butn:hover {
         color: aliceblue;
         background-color: $primary-color;
         opacity: 0.5;
     }
     
-    .btn:active {
+    .butn:active {
         opacity: 1;
     }
     
@@ -181,7 +182,7 @@ $full-opacity: 1;
     overflow-x: hidden;
     transition: 0.5s;
 
-    .closebtn {
+    .closebutn {
         position: absolute;
         top: 20px;
         right: 45px;
@@ -192,27 +193,18 @@ $full-opacity: 1;
         color: #818181;
     }
 
-    .closebtn:hover {
+    .closebutn:hover {
         color: #f1f1f1;
     }
     
-    .closebtn:focus {
+    .closebutn:focus {
         color: #f1f1f1;
     }
 } 
 
 
 // <!-- -----------------------------------Routines Section------------------------------------------- -->
-.routine-item {
-    .head {
-        display: flex;
-        align-items: center;
-        padding: 8px;
-        background-color: #fff;
-        min-height: 50px;
-        box-shadow: 0, 4, 8, 0, rgba(0, 0, 0, 0.2);
-    }
-}
+
 
 .add-icon {
     position: absolute;

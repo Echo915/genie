@@ -1,37 +1,26 @@
 <?php
-class Schedule {
-    private $db_conn;
+require_once "..//parent-classes/models.php";
 
-    public function __construct($db_conn) {
-        $this->db_conn = $db_conn;
-    }
-
-    public function add_task($task, $time, $status = NULL) {
-        $sql = "INSERT INTO tbl_schedule SET
-        task = '$task',
-        time = '$time',
-        status = '$status'
-        ";
-
-        $execution = mysqli_query($this->db_conn, $sql);
-    }
+class Schedule extends Models {
+    public $task;
+    public $time;
+    public $status;
 }
 
-class Note {
-    private $db_conn;
+class Note extends Models {
+    public $title;
+    public $content;
+    public $status;
+}
 
-    public function __construct($db_conn) {
-        $this->db_conn = $db_conn;
-    }
+class Routine extends Models {
+    public $routine_title;
+    public $deleted;
+}
 
-    public function add_note($title, $content, $status=NULL) {
-        $sql = "INSERT INTO tbl_note SET
-        title = '$title',
-        content = '$content',
-        status = '$status'
-        ";
-
-        $execution = mysqli_query($this->db_conn, $sql);
-    }
+class RoutineItem extends Models {
+    public $routine_title;
+    public $routine_id;
+    public $ass_days;
 }
 ?>

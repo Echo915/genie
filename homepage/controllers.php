@@ -1,4 +1,5 @@
 <?php
+require_once '..//config.php';
 require_once 'models.php';
 
 
@@ -91,10 +92,14 @@ if (isset($_POST["note-form"])) {
         $title = $_POST["title"];
         $content = $_POST["content"];
         $table = "tbl_note";
+
+        $note_kwargs = array(
+            "title" => $title,
+            "content" => $content,
+        );
     
         $newNote = new Note($connection, $table); // New note object
-        $newNoteController = new NoteController($newNote);
-        $newNoteController->add_note($title, $content); // Adds new note object to database
+        $newNote->add($note_kwargs);
 
         $_SESSION["formToken"] = $formToken;
     }
@@ -108,9 +113,13 @@ if (isset($_POST["note-form"])) {
         $time = $_POST["time"];
         $table = "tbl_schedule";
 
+        $schedule_kwargs = array(
+            "task" => $task,
+            "time" => $time,
+        );
+
         $newTask = new Schedule($connection, $table);
-        $newTaskController = new ScheduleController($newTask);
-        $newTaskController->add_task($task, $time);
+        $newTask->add($schedule_kwargs);
 
         $_SESSION["formToken"] = $formToken;
     }
@@ -135,9 +144,12 @@ if (isset($_POST["note-form"])) {
 
         // Checks if title exists in routine table in db
         if (mysqli_num_rows($execution) < 1) {
+            $routine_kwargs = array(
+                "routine_title" => $routine_group
+            );
+
             $newRoutine = new Routine($connection, $table); // Creates new routine if not exist
-            $newRoutineController = new RoutineController($newRoutine);
-            $newRoutineController->add_routine($routine_group);
+            $newRoutine->add($routine_kwargs);
 
             $execution = mysqli_query($connection, $sql);
         }
@@ -146,9 +158,14 @@ if (isset($_POST["note-form"])) {
         $routine_id = $row["id"];
 
         $table = "tbl_routine_item";
+        $routine_item_kwargs = array(
+            "routine_item_title" => $routine_item_title,
+            "routine_id" => $routine_id,
+            "ass_days" => $ass_days
+        );
+
         $newRoutineItem = new RoutineItem($connection, $table);
-        $newRoutineItemController = new RoutineItemController($newRoutineItem);
-        $newRoutineItemController->add_routine_item($routine_title, $routine_id, $ass_days);
+        $newRoutineItem->add($routine_item_kwargs);
 
         $_SESSION["formToken"] = $formToken;
     }

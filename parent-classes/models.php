@@ -12,7 +12,8 @@ class Models {
     }
 
     // Adds a new task
-    public function add() {
+    public function add($kwargs = array()) {
+        $this->kwargs = $kwargs;
         $sql = "INSERT INTO $this->table SET";
         
         // Loops through all items in $kwargs and updates $sql statement
@@ -28,7 +29,7 @@ class Models {
     public function get_all_objects() {
         $sql = "SELECT * FROM $this->table";
         $execution = mysqli_query($this->db_conn, $sql); // Executes sql statement
-        $objects = mysqli_fetch_all($execution, MYSQLI_ASSOC); // Fetches all data in executed statement
+        $objects = mysqli_fetch_all($execution, MYSQLI_ASSOC); // Fetches all data in executed statement (MYSQLI_ASSOC fetches results as an associative array)
         return $objects;
     }
 }

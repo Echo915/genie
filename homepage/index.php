@@ -8,7 +8,7 @@ require_once "..//includes/head.php";
         <a href="javascript:void(0)" class="closebutn" onclick="closeCurtain('overlay')">&times;</a>
         <div id="overlay-content" class="overlay-content"></div>
     </div>
-    <header id="header" class="header bg-light" style="z-index: 100; position: fixed; width: 100%; left: 0; top: 0;">
+    <header style="display: none;" id="header" class="header bg-light" style="z-index: 100; position: fixed; width: 100%; left: 0; top: 0;">
         <nav id="navbar" class="navbar navbar-expand-sm" style="z-index: 100;">
             <div class="container-fluid bg-white p-0 overflow-hidden">
                 <img src="..//assets/images/genie-logo-transparent.png" alt="logo" class="logo-icon">
@@ -87,7 +87,7 @@ require_once "..//includes/head.php";
                                                 ?>
                                                     <div id="task-item" class="task-item">
                                                         <!-- task time -->
-                                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;"><?php echo $time?></p>
+                                                        <p class="task-content" style="font-size: 11px; padding: 0 10px;"><?php echo date("d M, Y H:i", $time);?></p>
                                                         <!-- task item  -->
                                                         <h3 class="task-content" style="padding: 10px;"><?php echo $task ?></h3>
                                                     </div>

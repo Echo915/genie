@@ -1,3 +1,5 @@
 <?php
-header('Location: homepage/');
+require_once "config.php";
+
+redirect("homepage/");
 ?>
